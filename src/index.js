@@ -72,7 +72,7 @@ class Game {
           if (i < pos.c || i > blankPos.c) {
             row.push(arr[pos.r][i]);
           } else if (i === pos.c) {
-            row.push(arr[pos.r][blankPos.c])
+            row.push(this.blank)
           } else {
             row.push(arr[pos.r][i - 1]);
           }
@@ -82,7 +82,7 @@ class Game {
           if (i > pos.c || i < blankPos.c) {
             row.push(arr[pos.r][i]);
           } else if (i === pos.c) {
-            row.push(arr[pos.r][blankPos.c])
+            row.push(this.blank)
           } else {
             row.push(arr[pos.r][i + 1]);
           }
@@ -97,7 +97,7 @@ class Game {
             if (col !== pos.c || row < pos.r || row > blankPos.r) {
               return it;
             } else if(row === pos.r) {
-              return arr[blankPos.r][col];
+              return this.blank;
             } else {
               return arr[row - 1][col];
             }
@@ -109,7 +109,7 @@ class Game {
             if (col !== pos.c || row > pos.r || row < blankPos.r) {
               return it;
             } else if(row === pos.r) {
-              return arr[blankPos.r][col];
+              return this.blank;
             } else {
               return arr[row + 1][col];
             }
@@ -117,6 +117,20 @@ class Game {
         );
       }
     } 
+  }
+  // 퍼즐이 다 정렬되었는지
+  checkFinish() {
+    const flattenArr = [];
+    for(let i = 0; i < 4; i++) {
+      flattenArr.push(...this.puzzle[i]);
+    }
+    return flattenArr.every((item, index, arr) => index === 0 ? true : item > arr[index - 1]); 
+    // for (let i = 1; i < 16; i++) {
+    //   if(flattenArr[i - 1] > flattenArr[i]) {
+    //     return false;
+    //   } 
+    // }
+    // return true;
   }
 }
 
