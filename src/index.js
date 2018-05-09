@@ -2,6 +2,7 @@
 
 class Game {
   puzzle = [];
+  blank = 15;
   init() {
     this.puzzle = this.makingArr(this.randomNumber());
   }
@@ -39,6 +40,83 @@ class Game {
     } else {
       this.makingArr();
     }
+  }
+  // 몇째 줄에 있는 수인지 찾아주는 함수
+  checkRow(arr, num) {
+    return arr.findIndex((item, idx) => arr[idx].includes(num));
+  }
+  
+  // 몇번째 열에 있는 수인지 찾아주는 함수
+  checkCol(arr, num) {
+    return arr[this.checkRow(arr, num)].indexOf(num);
+  }
+  
+  // 입력한 번호와 blank의 번호 0에 따라 재배열되는 배열출력
+  move(num) {
+    const arr = this.puzzle;
+    // 클릭한 칸의 위치
+    const pos = {
+      r: this.checkRow(arr, num),
+      c: this.checkCol(arr, num)
+    }
+    // 빈칸의 위치
+    const blankPos = {
+      r: this.checkRow(arr, this.blank),
+      c: this.checkCol(arr, this.blank)
+    }
+    if (pos.r === blankPos.r) {
+      // ROW가 같다면
+      const row = [];
+      if (pos.c < blankPos.c) {
+        for(let i = 0; i < 4; i++) {
+          if (i < pos.c || i > blankPos.c) {
+            row.push(arr[pos.r][i]);
+          } else if (i === pos.c) {
+            row.push(arr[pos.r][blankPos.c])
+          } else {
+            row.push(arr[pos.r][i - 1]);
+          }
+        }
+      } else {
+        for(let i = 0; i < 4; i++) {
+          if (i > pos.c || i < blankPos.c) {
+            row.push(arr[pos.r][i]);
+          } else if (i === pos.c) {
+            row.push(arr[pos.r][blankPos.c])
+          } else {
+            row.push(arr[pos.r][i + 1]);
+          }
+        }
+      }
+      arr[pos.r] = row;
+    } else if (pos.c === blankPos.c) {
+      // COL이 같다면
+      if (pos.r < blankPos.r) {
+        this.puzzle = arr.map((item, row) => 
+          item.map((it, col) => {
+            if (col !== pos.c || row < pos.r || row > blankPos.r) {
+              return it;
+            } else if(row === pos.r) {
+              return arr[blankPos.r][col];
+            } else {
+              return arr[row - 1][col];
+            }
+          })
+        );
+      } else {
+        this.puzzle = arr.map((item, row) => 
+          item.map((it, col) => {
+            if (col !== pos.c || row > pos.r || row < blankPos.r) {
+              return it;
+            } else if(row === pos.r) {
+              return arr[blankPos.r][col];
+            } else {
+              return arr[row + 1][col];
+            }
+          })
+        );
+      }
+    } 
   }
 }
 
