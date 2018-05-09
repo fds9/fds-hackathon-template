@@ -1,5 +1,26 @@
-$main-color: skyblue;
+$main-color: white;
+$numWidth: 80px;
+$numHeight: 80px;
 
 body {
   background-color: $main-color;
+}
+
+.container{
+  display:flex;
+
+  .number{
+    width: $numWidth;
+    height: $numHeight;
+    border: 1px solid black;
+  }
+
+  .trial{
+    width: $numWidth;
+    height: $numHeight;
+  }
+  .reset{
+    width: $numWidth;
+    height: $numHeight;
+  }
 }
