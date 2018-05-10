@@ -12,9 +12,11 @@ body {
   background-color: #99bbef;
   box-sizing: border-box;
 }
+$CELL: 4;
+$GUTTER: 4;
 .puzzle__cell {
-  width: calc(25% - 4px);
-  height: calc(25% - 4px);
+  width: calc(25% - #{$GUTTER * 1px});
+  height: calc(25% - #{$GUTTER * 1px});
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,53 +35,16 @@ body {
     left: 0;
     transform-origin: 0 0;
   }
-  &[data-idx='0'] {
-    transform: translate(0, 0)
-  }
-  &[data-idx='1'] {
-    transform: translate(calc(100% + 4px), 0)
-  }
-  &[data-idx='2'] {
-    transform: translate(calc(200% + 8px), 0)
-  }
-  &[data-idx='3'] {
-    transform: translate(calc(300% + 12px), 0)
-  }
-  &[data-idx='4'] {
-    transform: translate(0, calc(100% + 4px))
-  }
-  &[data-idx='5'] {
-    transform: translate(calc(100% + 4px), calc(100% + 4px))
-  }
-  &[data-idx='6'] {
-    transform: translate(calc(200% + 8px), calc(100% + 4px))
-  }
-  &[data-idx='7'] {
-    transform: translate(calc(300% + 12px), calc(100% + 4px))
-  }
-  &[data-idx='8'] {
-    transform: translate(0, calc(200% + 8px))
-  }
-  &[data-idx='9'] {
-    transform: translate(calc(100% + 4px), calc(200% + 8px))
-  }
-  &[data-idx='10'] {
-    transform: translate(calc(200% + 8px), calc(200% + 8px))
-  }
-  &[data-idx='11'] {
-    transform: translate(calc(300% + 12px), calc(200% + 8px))
-  }
-  &[data-idx='12'] {
-    transform: translate(0, calc(300% + 12px))
-  }
-  &[data-idx='13'] {
-    transform: translate(calc(100% + 4px), calc(300% + 12px))
-  }
-  &[data-idx='14'] {
-    transform: translate(calc(200% + 8px), calc(300% + 12px))
-  }
-  &[data-idx='15'] {
-    transform: translate(calc(300% + 12px), calc(300% + 12px))
+  @for $i from 0 to $CELL {
+    @for $j from 0 to $CELL {
+      &[data-idx="#{$j + ($i * $CELL)}"] {
+        $translate-x: 100 * $j * 1%;
+        $translate-x-gutter: $GUTTER * $j * 1px;
+        $translate-y: 100 * $i * 1%;
+        $translate-y-gutter: $GUTTER * $i * 1px;
+        transform: translate(calc(#{$translate-x} + #{$translate-x-gutter}), calc(#{$translate-y} + #{$translate-y-gutter}));
+      }
+    }
   }
   &--blank {
     box-shadow: none;

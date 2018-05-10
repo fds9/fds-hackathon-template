@@ -1,3 +1,5 @@
+import prettierShowArr from "./debugging";
+
 class fifteenPuzzle {
   static flattenPuzzle(arr) {
     const flattenedPuzzle = [];
@@ -11,11 +13,13 @@ class fifteenPuzzle {
   count = 0;
   // 초기화 
   init() {
-    this.puzzle = this.makingArr(this.randomNumber());
+    this.puzzle = this.setPuzzle(this.getRandomNumbers());
+    this.count = 0;
   }
-  // 랜덤 수 구하기
-  randomNumber() {
+  // 랜덤 수를 담은 배열 구하기
+  getRandomNumbers() {
     const arr = [];
+    let number;
     for (let i = 0; i < 16; i++) {
       do {
         number = Math.floor(Math.random() * 16);
@@ -24,33 +28,52 @@ class fifteenPuzzle {
     }
     return arr;
   }
-  // 유효한 배열인지 확인한다.
-  makingArr(arr) {
+  // 15퍼즐 규칙에 유효한 배열인지 확인후 다차원 배열을 반환한다.
+  setPuzzle(arr) {
+    console.log(`만들어진 배열이 아래에서 유효한지 확인합니다. ${arr}`);
     let count = 0;
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16 - i; j++) {
-        if (arr[i] > arr[j]) {
+    const blankIndex = arr.indexOf(this.blank);
+    // 반전쌍의 개수 카운트
+    for (let i = 0; i < 16 - 1; i++) {
+      for (let j = i + 1; j < 16; j++) {
+        console.log(`${i}번째의 ${arr[i]} 와 ${j}번째의 ${arr[j]}를 찾아서 비교합니다.`);
+        if ((i !== blankIndex && j !== blankIndex) && arr[i] > arr[j]) {
           count++;
+          console.log(count);
         }
       }
     }
+    // 만약 반전쌍의 개수가 홀수일때 빈칸이 홀수 행에 있고 짝수일 때 짝수 행에 있는지
     if (
-      (count % 2 === 1 &&
-        (0 <= arr.indexOf(0) <= 3 || 8 <= arr.indexOf(0) <= 11)) ||
-      (count % 2 === 0 &&
-        (4 <= arr.indexOf(0) <= 7 || 12 <= arr.indexOf(0) <= 15))
+      (
+        count % 2 === 1 && 
+        (
+          0 <= blankIndex && 4 > blankIndex || 
+          8 <= blankIndex && 12 > blankIndex
+        )
+      ) ||
+      (
+        count % 2 === 0 && 
+        (
+          4 <= blankIndex && 8 > blankIndex || 
+          12 <= blankIndex && 16 > blankIndex
+        )
+      )
     ) {
+      console.log(`[유효]반전쌍의 개수: ${count} / 빈칸의 인덱스: ${blankIndex}`);
       const puzzle = [];
       for (let i = 0; i < 4; i++) {
         puzzle.push(arr.splice(0, 4));
       }
+      prettierShowArr(puzzle, '완성된 퍼즐');
       return puzzle;
     } else {
-      this.makingArr();
+      console.log(`[재배열!]반전쌍의 개수: ${count} / 빈칸의 인덱스: ${blankIndex}`);
+      return this.setPuzzle(this.getRandomNumbers());
     }
   }
   // 위치 객체 구하기
-  findPosition(arr, item) {
+  getCellsPosition(arr, item) {
     const position = {};
     for (let i = 0; i < 4; i++) {
       if (arr[i].includes(item)) {
@@ -61,12 +84,12 @@ class fifteenPuzzle {
     return position;
   }
   // 클릭한 번호를 입력받아 재배열하여 this.puzzle의 데이터를 업데이트
-  moveCells(num) {
+  updatePuzzle(num) {
     const arr = this.puzzle;
     // 클릭한 칸의 위치
-    const pos = this.findPosition(arr, num);
+    const pos = this.getCellsPosition(arr, num);
     // 빈칸의 위치
-    const blankPos = this.findPosition(arr, this.blank);
+    const blankPos = this.getCellsPosition(arr, this.blank);
     if (pos.r === blankPos.r) {
       // ROW가 같다면
       const row = [];
@@ -133,18 +156,17 @@ class fifteenPuzzle {
 
 const game = new fifteenPuzzle();
 const cells = document.querySelectorAll('.puzzle__cell');
-const startBtnEl = document.querySelector('.btn--start')
-const restartBtnEl = document.querySelector('.btn--restart')
+const startBtnEl = document.querySelector('.btn--start');
+const restartBtnEl = document.querySelector('.btn--restart');
 const moveCountEl = document.querySelector('.current-state__move__display');
 // 타이머
 const timeEl = document.querySelector('.current-state__time__display');
 const modalEl = document.querySelector('.modal');
-const madalCountEl = modalEl.querySelector('.final-score__move__display')
-const madalTimeEl = modalEl.querySelector('.final-score__time__display')
-
+const modalCountEl = modalEl.querySelector('.final-score__move__display');
+const modalTimeEl = modalEl.querySelector('.final-score__time__display');
 
 let time = 0;
-let timer;
+let setCountTime;
 
 // 게임 시작
 function gameInit() {
@@ -155,55 +177,54 @@ function gameInit() {
   });
 
   // 타이머 정의
-  timer = setInterval(() => {
+  setCountTime = setInterval(() => {
     time++;
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
-    console.log(minutes, seconds);
     timeEl.textContent = `${convert(minutes)}:${convert(seconds)}`; 
     function convert(n) {
-      return n < 10 ? `0${n}`: n
+      return n < 10 ? `0${n}`: n;
     }
   }, 1000);
 }
-// 임시 테스트
-console.log(game.puzzle);
+
+// 게임 리셋
+function gameReset() {
+  clearInterval(setCountTime);
+  time = 0;
+  timeEl.textContent = `00:00`;
+  gameInit();
+  moveCountEl.textContent = 0;
+}
+
 // 칸 클릭 이벤트
 cells.forEach((item, index) => {
   item.addEventListener('click', e => {
-    game.moveCells(index);
+    game.updatePuzzle(index);
+    prettierShowArr(game.puzzle, '클릭 후 변경된 퍼즐');
     const flattenedPuzzle = fifteenPuzzle.flattenPuzzle(game.puzzle);
     cells.forEach((item, index) => {
       item.dataset.idx = flattenedPuzzle.indexOf(index);
     });
     moveCountEl.textContent = game.count;
     if(game.checkFinish()) {
-      modalEl.classList.add('modal--end')
+      modalEl.classList.add('modal--end');
       modalCountEl.textContent = game.count;
       modalTimeEl.textContent = time;
-      console.log('성공!!');
       // 타이머 해제
-      clearInterval(timer);
+      clearInterval(setCountTime);
     } 
   });
 })
 
 // 재시작 버튼을 눌렀을 때
-restartBtnEl.addEventListener('click', e => {
-  // 타이머 초기화
-  clearInterval(timer);
-  time = 0;
-  
-  // 게임 시작
-  gameInit();
-});
+restartBtnEl.addEventListener('click', gameReset);
 
 // 시작 버튼을 눌렀을 때
 startBtnEl.addEventListener('click', e => {
-  clearInterval(timer);
-  time = 0;
-  gameInit();
-  modalEl.classList.remove('modal--start','modal--end');
+  // console.log(game.puzzle);
+  gameReset();
+  modalEl.classList.remove('modal--start', 'modal--end');
 });
 
 
