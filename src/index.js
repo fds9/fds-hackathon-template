@@ -77,7 +77,7 @@ class fifteenPuzzle {
           } else if (i === pos.c) {
             row.push(this.blank)
           } else {
-            count++
+            this.count++
             row.push(arr[pos.r][i - 1]);
           }
         }
@@ -88,7 +88,7 @@ class fifteenPuzzle {
           } else if (i === pos.c) {
             row.push(this.blank)
           } else {
-            count++
+            this.count++
             row.push(arr[pos.r][i + 1]);
           }
         }
@@ -104,7 +104,7 @@ class fifteenPuzzle {
             } else if(row === pos.r) {
               return this.blank;
             } else {
-              count++
+              this.count++
               return arr[row - 1][col];
             }
           })
@@ -117,7 +117,7 @@ class fifteenPuzzle {
             } else if(row === pos.r) {
               return this.blank;
             } else {
-              count++
+              this.count++
               return arr[row + 1][col];
             }
           })
