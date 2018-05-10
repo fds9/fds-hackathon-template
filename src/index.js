@@ -8,6 +8,7 @@ class fifteenPuzzle {
   }
   puzzle = [];
   blank = 15;
+  count = 0;
   // 초기화 
   init() {
     this.puzzle = this.makingArr(this.randomNumber());
@@ -76,6 +77,7 @@ class fifteenPuzzle {
           } else if (i === pos.c) {
             row.push(this.blank)
           } else {
+            count++
             row.push(arr[pos.r][i - 1]);
           }
         }
@@ -86,6 +88,7 @@ class fifteenPuzzle {
           } else if (i === pos.c) {
             row.push(this.blank)
           } else {
+            count++
             row.push(arr[pos.r][i + 1]);
           }
         }
@@ -101,6 +104,7 @@ class fifteenPuzzle {
             } else if(row === pos.r) {
               return this.blank;
             } else {
+              count++
               return arr[row - 1][col];
             }
           })
@@ -113,6 +117,7 @@ class fifteenPuzzle {
             } else if(row === pos.r) {
               return this.blank;
             } else {
+              count++
               return arr[row + 1][col];
             }
           })
@@ -128,6 +133,8 @@ class fifteenPuzzle {
 
 const game = new fifteenPuzzle();
 const cells = document.querySelectorAll('.box');
+const restartBtnEl = document.querySelector('.btn--restart')
+const moveCountEl = document.querySelector('.move-count');
 // 게임 시작
 function gameInit() {
   game.init();
@@ -146,8 +153,14 @@ cells.forEach((item, index) => {
     cells.forEach((item, index, arr) => {
       item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
     });
+    console.log('alkdf')
+    moveCountEl.textContent = game.count;
     if(game.checkFinish()) {
       console.log('성공!!');
     } 
   });
 })
+restartBtnEl.addEventListener('click', e => {
+  gameInit();
+})
+
