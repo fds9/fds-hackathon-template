@@ -1,4 +1,11 @@
 class fifteenPuzzle {
+  static flattenPuzzle(arr) {
+    const flattenedPuzzle = [];
+    for(let i = 0; i < 4; i++) {
+      flattenedPuzzle.push(...arr[i]);
+    }
+    return flattenedPuzzle;
+  }
   puzzle = [];
   blank = 15;
   // 초기화 
@@ -115,19 +122,8 @@ class fifteenPuzzle {
   }
   // 퍼즐이 다 정렬되었는지 확인하여 Boolean값 반환
   checkFinish() {
-    const flattenArr = [];
-    for(let i = 0; i < 4; i++) {
-      flattenArr.push(...this.puzzle[i]);
-    }
-    return flattenArr.every((item, index, arr) => index === 0 ? true : item > arr[index - 1]); 
+    return fifteenPuzzle.flattenPuzzle(this.puzzle).every((item, index, arr) => index === 0 ? true : item > arr[index - 1]); 
   }
-}
-function flattenPuzzle() {
-  const flattenPuzzle = [];
-  for(let i = 0; i < 4; i++) {
-    flattenPuzzle.push(...game.puzzle[i]);
-  }
-  return flattenPuzzle;
 }
 
 const game = new fifteenPuzzle();
@@ -135,7 +131,7 @@ const cells = document.querySelectorAll('.box');
 // 게임 시작
 function gameInit() {
   game.init();
-  const flattenedPuzzle = flattenPuzzle();
+  const flattenedPuzzle = fifteenPuzzle.flattenPuzzle(game.puzzle);
   cells.forEach((item, index) => {
     item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
   });
@@ -146,7 +142,7 @@ gameInit();
 cells.forEach((item, index) => {
   item.addEventListener('click', e => {
     game.moveCells(parseInt(e.target.dataset.cell));
-    const flattenedPuzzle = flattenPuzzle();
+    const flattenedPuzzle = fifteenPuzzle.flattenPuzzle(game.puzzle);
     cells.forEach((item, index, arr) => {
       item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
     });
