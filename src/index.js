@@ -135,6 +135,11 @@ const game = new fifteenPuzzle();
 const cells = document.querySelectorAll('.box');
 const restartBtnEl = document.querySelector('.btn--restart')
 const moveCountEl = document.querySelector('.move-count');
+// 타이머
+const timeEl = document.querySelector('.timer');
+let time = 0;
+let timer;
+
 // 게임 시작
 function gameInit() {
   game.init();
@@ -142,8 +147,19 @@ function gameInit() {
   cells.forEach((item, index) => {
     item.dataset.idx = flattenedPuzzle.indexOf(index);
   });
+
+  // 타이머 정의
+  timer = setInterval(() => {
+    time++;
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    console.log(minutes, seconds);
+    timeEl.textContent = `${convert(minutes)}:${convert(seconds)}`; 
+    function convert(n) {
+      return n < 10 ? `0${n}`: n
+    }
+  }, 1000);
 }
-gameInit();
 // 임시 테스트
 console.log(game.puzzle);
 // 칸 클릭 이벤트
@@ -157,10 +173,23 @@ cells.forEach((item, index) => {
     moveCountEl.textContent = game.count;
     if(game.checkFinish()) {
       console.log('성공!!');
+      // 타이머 해제
+      clearInterval(timer);
     } 
   });
 })
-restartBtnEl.addEventListener('click', e => {
-  gameInit();
-})
 
+// 재시작 버튼을 눌렀을 때
+restartBtnEl.addEventListener('click', e => {
+  // 타이머 초기화
+  clearInterval(timer);
+  time = 0;
+
+  // 게임 시작
+  gameInit();
+});
+
+// 시작 버튼을 눌렀을 때
+document.querySelector('.btn--start').addEventListener('click', e => {
+  gameInit();
+});
