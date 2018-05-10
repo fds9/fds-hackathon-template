@@ -4,7 +4,7 @@ body {
   background-color: $main-color;
 }
 
-.puzzle-wrap {
+.puzzle {
   position: relative;
   width: 500px;
   padding-bottom: 500px;
@@ -12,7 +12,7 @@ body {
   background-color: #99bbef;
   box-sizing: border-box;
 }
-.box {
+.puzzle__cell {
   width: calc(25% - 4px);
   height: calc(25% - 4px);
   display: flex;
@@ -20,8 +20,6 @@ body {
   align-items: center;
   font-size: 3em;
   box-sizing: border-box;
-}
-.puzzle {
   background-color: #ef8899;
   color: white;
   text-shadow: 0 0 7px #992233;
@@ -29,61 +27,98 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s;
+  &[data-idx] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+  &[data-idx='0'] {
+    transform: translate(0, 0)
+  }
+  &[data-idx='1'] {
+    transform: translate(calc(100% + 4px), 0)
+  }
+  &[data-idx='2'] {
+    transform: translate(calc(200% + 8px), 0)
+  }
+  &[data-idx='3'] {
+    transform: translate(calc(300% + 12px), 0)
+  }
+  &[data-idx='4'] {
+    transform: translate(0, calc(100% + 4px))
+  }
+  &[data-idx='5'] {
+    transform: translate(calc(100% + 4px), calc(100% + 4px))
+  }
+  &[data-idx='6'] {
+    transform: translate(calc(200% + 8px), calc(100% + 4px))
+  }
+  &[data-idx='7'] {
+    transform: translate(calc(300% + 12px), calc(100% + 4px))
+  }
+  &[data-idx='8'] {
+    transform: translate(0, calc(200% + 8px))
+  }
+  &[data-idx='9'] {
+    transform: translate(calc(100% + 4px), calc(200% + 8px))
+  }
+  &[data-idx='10'] {
+    transform: translate(calc(200% + 8px), calc(200% + 8px))
+  }
+  &[data-idx='11'] {
+    transform: translate(calc(300% + 12px), calc(200% + 8px))
+  }
+  &[data-idx='12'] {
+    transform: translate(0, calc(300% + 12px))
+  }
+  &[data-idx='13'] {
+    transform: translate(calc(100% + 4px), calc(300% + 12px))
+  }
+  &[data-idx='14'] {
+    transform: translate(calc(200% + 8px), calc(300% + 12px))
+  }
+  &[data-idx='15'] {
+    transform: translate(calc(300% + 12px), calc(300% + 12px))
+  }
+  &--blank {
+    box-shadow: none;
+    background-color: transparent;
+  }
 }
-.blank {
-  background-color: transparent;
+.modal {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.5s;
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+  .final-score {
+    transform: scale(0);
+  }
+  &--start {
+    opacity: 1;
+    transform: scale(1);
+    background-color: red;
+  }
+  &--end {
+    opacity: 1;
+    transform: scale(1);
+    background-color: blue;
+    .final-score {
+      animation: final 0.5s forwards;
+    }
+  }
+  
 }
-.box[data-idx] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-origin: 0 0;
-}
-.box[data-idx='0'] {
-  transform: translate(0, 0)
-}
-.box[data-idx='1'] {
-  transform: translate(calc(100% + 4px), 0)
-}
-.box[data-idx='2'] {
-  transform: translate(calc(200% + 8px), 0)
-}
-.box[data-idx='3'] {
-  transform: translate(calc(300% + 12px), 0)
-}
-.box[data-idx='4'] {
-  transform: translate(0, calc(100% + 4px))
-}
-.box[data-idx='5'] {
-  transform: translate(calc(100% + 4px), calc(100% + 4px))
-}
-.box[data-idx='6'] {
-  transform: translate(calc(200% + 8px), calc(100% + 4px))
-}
-.box[data-idx='7'] {
-  transform: translate(calc(300% + 12px), calc(100% + 4px))
-}
-.box[data-idx='8'] {
-  transform: translate(0, calc(200% + 8px))
-}
-.box[data-idx='9'] {
-  transform: translate(calc(100% + 4px), calc(200% + 8px))
-}
-.box[data-idx='10'] {
-  transform: translate(calc(200% + 8px), calc(200% + 8px))
-}
-.box[data-idx='11'] {
-  transform: translate(calc(300% + 12px), calc(200% + 8px))
-}
-.box[data-idx='12'] {
-  transform: translate(0, calc(300% + 12px))
-}
-.box[data-idx='13'] {
-  transform: translate(calc(100% + 4px), calc(300% + 12px))
-}
-.box[data-idx='14'] {
-  transform: translate(calc(200% + 8px), calc(300% + 12px))
-}
-.box[data-idx='15'] {
-  transform: translate(calc(300% + 12px), calc(300% + 12px))
+@keyframes final {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

@@ -132,11 +132,17 @@ class fifteenPuzzle {
 }
 
 const game = new fifteenPuzzle();
-const cells = document.querySelectorAll('.box');
+const cells = document.querySelectorAll('.puzzle__cell');
+const startBtnEl = document.querySelector('.btn--start')
 const restartBtnEl = document.querySelector('.btn--restart')
-const moveCountEl = document.querySelector('.move-count');
+const moveCountEl = document.querySelector('.current-state__move__display');
 // 타이머
-const timeEl = document.querySelector('.timer');
+const timeEl = document.querySelector('.current-state__time__display');
+const modalEl = document.querySelector('.modal');
+const madalCountEl = modalEl.querySelector('.final-score__move__display')
+const madalTimeEl = modalEl.querySelector('.final-score__time__display')
+
+
 let time = 0;
 let timer;
 
@@ -172,6 +178,9 @@ cells.forEach((item, index) => {
     });
     moveCountEl.textContent = game.count;
     if(game.checkFinish()) {
+      modalEl.classList.add('modal--end')
+      modalCountEl.textContent = game.count;
+      modalTimeEl.textContent = time;
       console.log('성공!!');
       // 타이머 해제
       clearInterval(timer);
@@ -184,12 +193,18 @@ restartBtnEl.addEventListener('click', e => {
   // 타이머 초기화
   clearInterval(timer);
   time = 0;
-
+  
   // 게임 시작
   gameInit();
 });
 
 // 시작 버튼을 눌렀을 때
-document.querySelector('.btn--start').addEventListener('click', e => {
+startBtnEl.addEventListener('click', e => {
+  clearInterval(timer);
+  time = 0;
   gameInit();
+  modalEl.classList.remove('modal--start','modal--end');
 });
+
+
+
