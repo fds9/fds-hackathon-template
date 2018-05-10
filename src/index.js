@@ -1,11 +1,11 @@
-// 랜덤으로 숫자를 배열에 넣어준다.
-
-class Game {
+class fifteenPuzzle {
   puzzle = [];
   blank = 15;
+  // 초기화 
   init() {
     this.puzzle = this.makingArr(this.randomNumber());
   }
+  // 랜덤 수 구하기
   randomNumber() {
     const arr = [];
     for (let i = 0; i < 16; i++) {
@@ -41,29 +41,24 @@ class Game {
       this.makingArr();
     }
   }
-  // 몇째 줄에 있는 수인지 찾아주는 함수
-  checkRow(arr, num) {
-    return arr.findIndex((item, idx) => arr[idx].includes(num));
+  // 위치 객체 구하기
+  findPosition(arr, item) {
+    const position = {};
+    for (let i = 0; i < 4; i++) {
+      if (arr[i].includes(item)) {
+        position.r = i;
+        position.c = arr[i].indexOf(item);
+      }
+    }
+    return position;
   }
-  
-  // 몇번째 열에 있는 수인지 찾아주는 함수
-  checkCol(arr, num) {
-    return arr[this.checkRow(arr, num)].indexOf(num);
-  }
-  
-  // 입력한 번호와 blank의 번호 0에 따라 재배열되는 배열출력
-  move(num) {
+  // 클릭한 번호를 입력받아 재배열하여 this.puzzle의 데이터를 업데이트
+  moveCells(num) {
     const arr = this.puzzle;
     // 클릭한 칸의 위치
-    const pos = {
-      r: this.checkRow(arr, num),
-      c: this.checkCol(arr, num)
-    }
+    const pos = this.findPosition(arr, num);
     // 빈칸의 위치
-    const blankPos = {
-      r: this.checkRow(arr, this.blank),
-      c: this.checkCol(arr, this.blank)
-    }
+    const blankPos = this.findPosition(arr, this.blank);
     if (pos.r === blankPos.r) {
       // ROW가 같다면
       const row = [];
@@ -118,24 +113,45 @@ class Game {
       }
     } 
   }
-  // 퍼즐이 다 정렬되었는지
+  // 퍼즐이 다 정렬되었는지 확인하여 Boolean값 반환
   checkFinish() {
     const flattenArr = [];
     for(let i = 0; i < 4; i++) {
       flattenArr.push(...this.puzzle[i]);
     }
     return flattenArr.every((item, index, arr) => index === 0 ? true : item > arr[index - 1]); 
-    // for (let i = 1; i < 16; i++) {
-    //   if(flattenArr[i - 1] > flattenArr[i]) {
-    //     return false;
-    //   } 
-    // }
-    // return true;
   }
 }
+function flattenPuzzle() {
+  const flattenPuzzle = [];
+  for(let i = 0; i < 4; i++) {
+    flattenPuzzle.push(...game.puzzle[i]);
+  }
+  return flattenPuzzle;
+}
 
-const game = new Game();
-game.init();
-console.log(game.puzzle);
-game.init();
-console.log(game.puzzle);
+const game = new fifteenPuzzle();
+const cells = document.querySelectorAll('.box');
+// 게임 시작
+function gameInit() {
+  game.init();
+  const flattenedPuzzle = flattenPuzzle();
+  cells.forEach((item, index) => {
+    item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
+  });
+}
+gameInit();
+
+// 칸 클릭 이벤트
+cells.forEach((item, index) => {
+  item.addEventListener('click', e => {
+    game.moveCells(parseInt(e.target.dataset.cell));
+    const flattenedPuzzle = flattenPuzzle();
+    cells.forEach((item, index, arr) => {
+      item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
+    });
+    if(game.checkFinish()) {
+      console.log('성공!!');
+    } 
+  });
+})
