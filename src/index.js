@@ -140,20 +140,20 @@ function gameInit() {
   game.init();
   const flattenedPuzzle = fifteenPuzzle.flattenPuzzle(game.puzzle);
   cells.forEach((item, index) => {
-    item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
+    item.dataset.idx = flattenedPuzzle.indexOf(index);
   });
 }
 gameInit();
-
+// 임시 테스트
+console.log(game.puzzle);
 // 칸 클릭 이벤트
 cells.forEach((item, index) => {
   item.addEventListener('click', e => {
-    game.moveCells(parseInt(e.target.dataset.cell));
+    game.moveCells(index);
     const flattenedPuzzle = fifteenPuzzle.flattenPuzzle(game.puzzle);
-    cells.forEach((item, index, arr) => {
-      item.dataset.idx = flattenedPuzzle.indexOf(parseInt(item.dataset.cell));
+    cells.forEach((item, index) => {
+      item.dataset.idx = flattenedPuzzle.indexOf(index);
     });
-    console.log('alkdf')
     moveCountEl.textContent = game.count;
     if(game.checkFinish()) {
       console.log('성공!!');
