@@ -4,29 +4,42 @@ $primary-color: #2D4471;
 $point-color: #AA3939;
 $main-font: 'Gugi', cursive;
 $sub-font: 'Nanum Gothic Coding', monospace;
+$mobile-width: 640px;
 
+@mixin mobile($mobile-width: $mobile-width) {
+  @media all and (max-width: $mobile-width) {
+    @content;
+  }
+}
 html {
   width: 100%;
   height: 100%;
 }
+
 body {
   width: 100%;
   height: 100%;
   margin: 0;
+  padding: 0.5em 2em;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: $main-color;
   font-family: $main-font;
+  box-sizing: border-box;
+  @include mobile {
+    padding: 0;
+    height: auto;
+  }
 }
 
 .game {
   display: flex;
   flex-flow: row wrap;
-  align-items: space-around;
+  align-content: space-around;
   justify-content: space-around;
-  max-width: 600px;
+  max-width: 550px;
   width: 85%;
   padding: 2em 2em;
   background-color: $primary-color;
@@ -35,6 +48,7 @@ body {
   border-left: 10px solid darken($primary-color, 7%);
   border-right: 20px solid darken($primary-color, 10%);
   border-bottom: 20px solid darken($primary-color, 20%);
+  box-shadow: inset 0 0 10px darken($primary-color, 20%);
   box-sizing: border-box;
   &__title {
     width: 100%;
@@ -42,8 +56,17 @@ body {
     font-size: 3em;
     text-align: center;
     color: lighten($primary-color, 70%);
+    text-shadow: 0 0 2px darken($primary-color, 30%);
+    @include mobile {
+      font-size: 2em;
+    }
+  }
+  @include mobile {
+    width: 100%;
+    padding: 2em 0.8em;
   }
 }
+
 .puzzle {
   position: relative;
   width: 100%;
@@ -75,6 +98,9 @@ body {
     border-right: 10px solid lighten($main-color, 5%);
     cursor: pointer;
     transition: all 0.2s;
+    @include mobile {
+      font-size: 1.5em;
+    }
     &[data-idx] {
       position: absolute;
       top: 0;
@@ -93,20 +119,22 @@ body {
       }
     }
     &--blank {
+      cursor: auto;
       box-shadow: none;
       border-width: 0;
       background-color: transparent;
     }
   }
 }
+
 .current-state {
   display: flex;
+  margin: 0.5em;
   padding: 0.5em 0.8em;
   background-color: darken($primary-color, 10%);
   color: #fff;
   > div {
     align-self: center;
-    vertical-align: vertical;
   }
   &__move {
     &__display {
@@ -115,11 +143,33 @@ body {
   }
   &__time {
     margin-left: 1em;
+    padding-left: 1em;
+    border-left: 2px solid rgba($primary-color, 0.6);
     &__display {
       color: lighten($main-color, 10%);
     }
   }
 }
+
+.btn--restart {
+  padding: 0.5em 0.8em;
+  border: 0;
+  margin: 0.5em;
+  font-family: $main-font;
+  font-size: 1.5em;
+  color: #fff;
+  background: $point-color;
+  border-top: 3px solid darken($point-color, 5%);
+  border-left: 3px solid darken($point-color, 7%);
+  border-bottom: 5px solid darken($point-color, 15%);
+  border-right: 5px solid darken($point-color, 10%);
+  box-shadow: inset -1px -1px 5px darken($point-color, 20%);
+  &:hover {
+    cursor: pointer;
+    background: darken($point-color, 5%);
+  }
+}
+
 .modal {
   opacity: 0;
   transform: scale(0);
@@ -133,13 +183,16 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  &__guid {
+  &__guide {
     text-align: center;
     font-family: $sub-font;
     background-color: darken($main-color, 8%);
     padding: 1.5em 3em;
     line-height: 200%;
     color: #fff;
+    > strong {
+      font-size: 1.5em;
+    }
   } 
   .btn--start {
     font-family: $main-font;
@@ -152,70 +205,70 @@ body {
     border-left: 3px solid darken($point-color, 7%);
     border-bottom: 5px solid darken($point-color, 15%);
     border-right: 5px solid darken($point-color, 10%);
+    box-shadow: inset -1px -1px 5px darken($point-color, 20%);
+    cursor: pointer;
   }
-  .final-score {
+  .final-score, .final-message {
     transform: scale(0);
-  }
-  .final__message {
-    background-color: darken($primary-color, 8%);
-    transform: scale(0);
-    color: #fff;
-    padding: 0.5em 1.5em; 
-    text-align: center;   
-    > em {
-      font-style: normal;
-      display: block;
-      font-size: 4em;
-      font-weight: bold;
-      font-family: $main-font;
-    }
   }
   &--start {
     opacity: 1;
     transform: scale(1);
     background-color: rgba($main-color , 0.8);
+    .final-score, .final-message {
+      display: none;
+    }
   }
   &--end {
-  
     opacity: 1;
     transform: scale(1);
     background-color: rgba($primary-color, 0.8);
-    .modal__guid {
+    .modal__guide {
       display: none;
     }
-    .final__message, .final-score {
+    .final-score, .final-message {
       animation: final 0.5s forwards;
     }
-   }
+  }
 }
-  .final-score {
 
-    background-color: rgba(#fff, 0.8);
-    color: darken($primary-color , 8%);
-    padding: 0.5em;
-   &__move__display {
-     color: $point-color;
-   }
-   &__time__display {
-     color: $point-color;
-   }
-  }
-  .btn--restart {
-    padding: 0.5em 0.8em;
-  border: 0;
-  font-family: $main-font;
-  font-size: 1.5em;
-  color: #fff;
-  background: $point-color;
-  border-top: 3px solid darken($point-color, 5%);
-  border-left: 3px solid darken($point-color, 7%);
-  border-bottom: 5px solid darken($point-color, 15%);
-  border-right: 5px solid darken($point-color, 10%);
-  &:hover {
-    cursor: pointer;
-    background: darken($point-color, 5%);
+.final-message {
+  background-color: darken($primary-color, 8%);
+  transform: scale(0);
+  padding: 1.2em 1.5em; 
+  text-align: center;  
+  font-size: 1.2em;
+  color: lighten($primary-color, 40%);
+  > em {
+    font-style: normal;
+    display: block;
+    margin-bottom: 0.3em;
+    font-size: 3.5em;
+    font-weight: bold;
+    font-family: $main-font;
+    color: #fff;
+    @include mobile {
+      font-size: 2em;
+    }
   }
 }
+
+.final-score {
+  // display: flex;
+  background-color: #fff;
+  color: darken($primary-color , 8%);
+  padding: 1.2em 0.8em;
+  &__time {
+    padding-top: 1em;
+    margin-top: 1em;
+    border-top: 1px solid rgba($primary-color, 0.2);
+  }
+  &__move__display, &__time__display {
+    color: $point-color;
+  }
+}
+
+// 완료시 애니메이션
 @keyframes final {
   0% {
     transform: scale(0);
