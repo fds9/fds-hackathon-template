@@ -3,3 +3,87 @@ $main-color: skyblue;
 body {
   background-color: $main-color;
 }
+
+.puzzle {
+  position: relative;
+  width: 500px;
+  padding-bottom: 500px;
+  border: 10px solid #99bbef;
+  background-color: #99bbef;
+  box-sizing: border-box;
+}
+$CELL: 4;
+$GUTTER: 4;
+.puzzle__cell {
+  width: calc(25% - #{$GUTTER * 1px});
+  height: calc(25% - #{$GUTTER * 1px});
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  box-sizing: border-box;
+  background-color: #ef8899;
+  color: white;
+  text-shadow: 0 0 7px #992233;
+  box-shadow: 1px 1px 3px #7a9ed3;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  &[data-idx] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+  }
+  @for $i from 0 to $CELL {
+    @for $j from 0 to $CELL {
+      &[data-idx="#{$j + ($i * $CELL)}"] {
+        $translate-x: 100 * $j * 1%;
+        $translate-x-gutter: $GUTTER * $j * 1px;
+        $translate-y: 100 * $i * 1%;
+        $translate-y-gutter: $GUTTER * $i * 1px;
+        transform: translate(calc(#{$translate-x} + #{$translate-x-gutter}), calc(#{$translate-y} + #{$translate-y-gutter}));
+      }
+    }
+  }
+  &--blank {
+    box-shadow: none;
+    background-color: transparent;
+  }
+}
+.modal {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.5s;
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+  .final-score {
+    transform: scale(0);
+  }
+  &--start {
+    opacity: 1;
+    transform: scale(1);
+    background-color: red;
+  }
+  &--end {
+    opacity: 1;
+    transform: scale(1);
+    background-color: blue;
+    .final-score {
+      animation: final 0.5s forwards;
+    }
+  }
+  
+}
+@keyframes final {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

@@ -4,10 +4,53 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>해커톤 템플릿 프로젝트</title>
+  <title>15 PUZZLE</title>
   <link rel="stylesheet" href="./index.scss">
 </head>
 <body>
-  <h1>해커톤 템플릿 프로젝트</h1>
+  <h1>15 PUZZLE GAME</h1>
+  <div class="puzzle">
+    <div class="puzzle__cell" data-idx="0">1</div>
+    <div class="puzzle__cell" data-idx="1">2</div>
+    <div class="puzzle__cell" data-idx="2">3</div>
+    <div class="puzzle__cell" data-idx="3">4</div>
+    <div class="puzzle__cell" data-idx="4">5</div>
+    <div class="puzzle__cell" data-idx="5">6</div>
+    <div class="puzzle__cell" data-idx="6">7</div>
+    <div class="puzzle__cell" data-idx="7">8</div>
+    <div class="puzzle__cell" data-idx="8">9</div>
+    <div class="puzzle__cell" data-idx="9">10</div>
+    <div class="puzzle__cell" data-idx="10">11</div>
+    <div class="puzzle__cell" data-idx="11">12</div>
+    <div class="puzzle__cell" data-idx="12">13</div>
+    <div class="puzzle__cell" data-idx="13">14</div>
+    <div class="puzzle__cell" data-idx="14">15</div>
+    <div class="puzzle__cell puzzle__cell--blank" data-idx="15"></div>
+  </div>
+  <button type="button" class="btn--restart">RESTART</button>
+  <div class="current-state">
+    <div class="current-state__move">
+      Move:
+      <span class="current-state__move__display">0</span>
+    </div>
+    <div class="current-state__time">
+      Time: 
+      <span class="current-state__time__display">00:00</span>
+    </div>
+  </div>
+  <div class="modal modal--start">
+    <div class="final-score">
+    <div class="final-score__move">
+          Move:
+          <span class="final-score__move__display"></span>
+        </div>
+        <div class="final-score__time">
+          Time: 
+          <span class="final-score__time__display"></span>
+        </div>
+      </div>
+    <button type="button" class="btn--start">START</button>
+  </div>
+  <script src="./index.js"></script>
 </body>
 </html>
