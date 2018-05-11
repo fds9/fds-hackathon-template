@@ -26,13 +26,16 @@ function gameInit() {
   // 타이머 정의
   setCountTime = setInterval(() => {
     time++;
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-    timeEl.textContent = `${convert(minutes)}:${convert(seconds)}`; 
-    function convert(n) {
-      return n < 10 ? `0${n}`: n;
-    }
+    timeEl.textContent = calcTime();
   }, 1000);
+}
+function calcTime() {
+  let minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+  function convert(n) {
+    return n < 10 ? `0${n}`: n;
+  }
+  return `${convert(minutes)}:${convert(seconds)}`;
 }
 
 // 게임 리셋
@@ -56,10 +59,11 @@ cells.forEach((item, index) => {
     moveCountEl.textContent = game.count;
     if(game.checkFinish()) {
       modalEl.classList.add('modal--end');
-      modalCountEl.textContent = game.count;
-      modalTimeEl.textContent = time;
-      // 타이머 해제
       clearInterval(setCountTime);
+      modalCountEl.textContent = game.count;
+      modalTimeEl.textContent = calcTime();
+      timeEl.textContent = calcTime();
+      // 타이머 해제
     } 
   });
 })
