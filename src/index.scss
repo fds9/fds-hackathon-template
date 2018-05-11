@@ -129,25 +129,79 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  &__guid {
+    text-align: center;
+    font-family: $sub-font;
+    background-color: darken($main-color, 8%);
+    padding: 1.5em 3em;
+    line-height: 200%;
+    color: #fff;
+  } 
+  .btn--start {
+    font-family: $main-font;
+    font-size: 1.5em;
+    color : #fff;
+    background-color: $point-color;
+    border: 0;
+    padding: 0.5em 0.8em;
+    border-top: 3px solid darken($point-color, 5%);
+    border-left: 3px solid darken($point-color, 7%);
+    border-bottom: 5px solid darken($point-color, 15%);
+    border-right: 5px solid darken($point-color, 10%);
+  }
   .final-score {
     transform: scale(0);
+  }
+  .final__message {
+    background-color: darken($primary-color, 8%);
+    transform: scale(0);
+    color: #fff;
+    padding: 0.5em 1.5em; 
+    text-align: center;   
+    > em {
+      font-style: normal;
+      display: block;
+      font-size: 4em;
+      font-weight: bold;
+      font-family: $main-font;
+    }
   }
   &--start {
     opacity: 1;
     transform: scale(1);
-    background-color: red;
+    background-color: rgba($main-color , 0.8);
   }
   &--end {
+  
     opacity: 1;
     transform: scale(1);
-    background-color: blue;
-    .final-score {
+    background-color: rgba($primary-color, 0.8);
+    .modal__guid {
+      display: none;
+    }
+    .final__message, .final-score {
       animation: final 0.5s forwards;
     }
-  }
+   }
 }
-.btn--restart {
-  padding: 0.5em 0.8em;
+  .final-score {
+
+    background-color: rgba(#fff, 0.8);
+    color: darken($primary-color , 8%);
+    padding: 0.5em;
+   &__move__display {
+     color: $point-color;
+   }
+   &__time__display {
+     color: $point-color;
+   }
+  }
+  .btn--restart {
+    padding: 0.5em 0.8em;
   border: 0;
   font-family: $main-font;
   font-size: 1.5em;

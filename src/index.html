@@ -40,17 +40,29 @@
     </div>
     <button type="button" class="btn--restart">RESTART</button>
   </div>
-  <div class="modal modal--start">
+  <div class="modal modal--end">
+    <p class="modal__guid">
+      퍼즐을 1에서 15까지 순서대로 맞춰주세요. <br>
+      빈 칸은 우측 하단에 위치해야 합니다.<br>
+      빈 칸과 같은 행렬에 있는 블록을 선택하면 <br>
+      빈칸으로 밀어넣을 수 있습니다. 
+    </p>
     <div class="final-score">
       <div class="final-score__move">
           Move:
-          <span class="final-score__move__display"></span>
+          <span class="final-score__move__display">0</span>
         </div>
         <div class="final-score__time">
           Time: 
-          <span class="final-score__time__display"></span>
+          <span class="final-score__time__display">00:00</span>
         </div>
       </div>
+      <p class="final__message">
+        <em>
+          congratulation!
+        </em>
+         Try Again!
+      </p>
     <button type="button" class="btn--start">START</button>
   </div>
   <script src="./index.js"></script>
