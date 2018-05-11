@@ -1,5 +1,4 @@
 import prettierShowArr from "./debugging";
-
 class fifteenPuzzle {
   static flattenPuzzle(arr) {
     const flattenedPuzzle = [];
@@ -28,8 +27,8 @@ class fifteenPuzzle {
     }
     return arr;
   }
-  // 15퍼즐 규칙에 유효한 배열인지 확인후 다차원 배열을 반환한다.
-  setPuzzle(arr) {
+  // 게임에 규칙에 유효한 배열인지 확인하는 함수 
+  isAvailableGame(arr) {
     console.log(`만들어진 배열이 아래에서 유효한지 확인합니다. ${arr}`);
     let count = 0;
     const blankIndex = arr.indexOf(this.blank);
@@ -61,16 +60,25 @@ class fifteenPuzzle {
       )
     ) {
       console.log(`[유효]반전쌍의 개수: ${count} / 빈칸의 인덱스: ${blankIndex}`);
-      const puzzle = [];
+      return true;
+      
+    } else {
+      console.log(`[재배열!]반전쌍의 개수: ${count} / 빈칸의 인덱스: ${blankIndex}`);
+      return false;
+    }
+  }
+  // 15퍼즐 규칙에 유효한지 확인후 true면 다차원 배열을 반환한다.
+  setPuzzle(arr) {
+   if(this.isAvailableGame(arr)) {
+    const puzzle = [];
       for (let i = 0; i < 4; i++) {
         puzzle.push(arr.splice(0, 4));
       }
       prettierShowArr(puzzle, '완성된 퍼즐');
       return puzzle;
-    } else {
-      console.log(`[재배열!]반전쌍의 개수: ${count} / 빈칸의 인덱스: ${blankIndex}`);
-      return this.setPuzzle(this.getRandomNumbers());
-    }
+   } else {
+    return this.setPuzzle(this.getRandomNumbers());
+   }
   }
   // 위치 객체 구하기
   getCellsPosition(arr, item) {
