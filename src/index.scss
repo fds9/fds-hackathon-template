@@ -1,54 +1,123 @@
-$main-color: skyblue;
+@import url('https://fonts.googleapis.com/css?family=Gugi|Nanum+Gothic+Coding');
+$main-color: #AA7D39;
+$primary-color: #2D4471;
+$point-color: #AA3939;
+$main-font: 'Gugi', cursive;
+$sub-font: 'Nanum Gothic Coding', monospace;
 
+html {
+  width: 100%;
+  height: 100%;
+}
 body {
-  background-color: $main-color;
-}
-
-.puzzle {
-  position: relative;
-  width: 500px;
-  padding-bottom: 500px;
-  border: 10px solid #99bbef;
-  background-color: #99bbef;
-  box-sizing: border-box;
-}
-$CELL: 4;
-$GUTTER: 4;
-.puzzle__cell {
-  width: calc(25% - #{$GUTTER * 1px});
-  height: calc(25% - #{$GUTTER * 1px});
+  width: 100%;
+  height: 100%;
+  margin: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 3em;
+  background-color: $main-color;
+  font-family: $main-font;
+}
+
+.game {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: space-around;
+  justify-content: space-around;
+  max-width: 600px;
+  width: 85%;
+  padding: 2em 2em;
+  background-color: $primary-color;
+  background-image: radial-gradient(circle at 20% 20%, lighten(#28546C, 15%), transparent 40%);
+  border-top: 10px solid darken($primary-color, 2%);
+  border-left: 10px solid darken($primary-color, 7%);
+  border-right: 20px solid darken($primary-color, 10%);
+  border-bottom: 20px solid darken($primary-color, 20%);
   box-sizing: border-box;
-  background-color: #ef8899;
-  color: white;
-  text-shadow: 0 0 7px #992233;
-  box-shadow: 1px 1px 3px #7a9ed3;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.2s;
-  &[data-idx] {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform-origin: 0 0;
+  &__title {
+    width: 100%;
+    margin: 0 0 0.5em;
+    font-size: 3em;
+    text-align: center;
+    color: lighten($primary-color, 70%);
   }
-  @for $i from 0 to $CELL {
-    @for $j from 0 to $CELL {
-      &[data-idx="#{$j + ($i * $CELL)}"] {
-        $translate-x: 100 * $j * 1%;
-        $translate-x-gutter: $GUTTER * $j * 1px;
-        $translate-y: 100 * $i * 1%;
-        $translate-y-gutter: $GUTTER * $i * 1px;
-        transform: translate(calc(#{$translate-x} + #{$translate-x-gutter}), calc(#{$translate-y} + #{$translate-y-gutter}));
+}
+.puzzle {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  margin-bottom: 2em;
+  border-top: 20px solid darken($primary-color, 10%);
+  border-left: 20px solid darken($primary-color, 20%);
+  border-right: 10px solid darken($primary-color, 7%);
+  border-bottom: 10px solid darken($primary-color, 4%);
+  background-color: lighten($primary-color, 2%);
+  box-sizing: border-box;
+  $CELL: 4;
+  $GUTTER: 4;
+  &__cell {
+    width: calc(25% - #{$GUTTER * 1px});
+    height: calc(25% - #{$GUTTER * 1px});
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    box-sizing: border-box;
+    background-color: lighten($main-color, 15%);
+    box-shadow: inset 0 0 10px lighten($main-color, 5%);
+    color: white;
+    text-shadow: 0 0 3px darken($primary-color, 15%);
+    border-top: 10px solid lighten($main-color, 20%);
+    border-left: 10px solid lighten($main-color, 25%);
+    border-bottom: 10px solid lighten($main-color, 10%);
+    border-right: 10px solid lighten($main-color, 5%);
+    cursor: pointer;
+    transition: all 0.2s;
+    &[data-idx] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+    }
+    @for $i from 0 to $CELL {
+      @for $j from 0 to $CELL {
+        &[data-idx="#{$j + ($i * $CELL)}"] {
+          $translate-x: 100 * $j * 1%;
+          $translate-x-gutter: $GUTTER * $j * 1px;
+          $translate-y: 100 * $i * 1%;
+          $translate-y-gutter: $GUTTER * $i * 1px;
+          transform: translate(calc(#{$translate-x} + #{$translate-x-gutter}), calc(#{$translate-y} + #{$translate-y-gutter}));
+        }
       }
     }
+    &--blank {
+      box-shadow: none;
+      border-width: 0;
+      background-color: transparent;
+    }
   }
-  &--blank {
-    box-shadow: none;
-    background-color: transparent;
+}
+.current-state {
+  display: flex;
+  padding: 0.5em 0.8em;
+  background-color: darken($primary-color, 10%);
+  color: #fff;
+  > div {
+    align-self: center;
+    vertical-align: vertical;
+  }
+  &__move {
+    &__display {
+      color: lighten($main-color, 10%);
+    }
+  }
+  &__time {
+    margin-left: 1em;
+    &__display {
+      color: lighten($main-color, 10%);
+    }
   }
 }
 .modal {
@@ -56,11 +125,10 @@ $GUTTER: 4;
   transform: scale(0);
   transition: opacity 0.5s;
   position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   .final-score {
     transform: scale(0);
   }
@@ -77,7 +145,22 @@ $GUTTER: 4;
       animation: final 0.5s forwards;
     }
   }
-  
+}
+.btn--restart {
+  padding: 0.5em 0.8em;
+  border: 0;
+  font-family: $main-font;
+  font-size: 1.5em;
+  color: #fff;
+  background: $point-color;
+  border-top: 3px solid darken($point-color, 5%);
+  border-left: 3px solid darken($point-color, 7%);
+  border-bottom: 5px solid darken($point-color, 15%);
+  border-right: 5px solid darken($point-color, 10%);
+  &:hover {
+    cursor: pointer;
+    background: darken($point-color, 5%);
+  }
 }
 @keyframes final {
   0% {
