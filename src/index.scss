@@ -1,5 +1,277 @@
-$main-color: skyblue;
+@import url('https://fonts.googleapis.com/css?family=Gugi|Nanum+Gothic+Coding');
+$main-color: #AA7D39;
+$primary-color: #2D4471;
+$point-color: #AA3939;
+$main-font: 'Gugi', cursive;
+$sub-font: 'Nanum Gothic Coding', monospace;
+$mobile-width: 640px;
+
+@mixin mobile($mobile-width: $mobile-width) {
+  @media all and (max-width: $mobile-width) {
+    @content;
+  }
+}
+html {
+  width: 100%;
+  height: 100%;
+}
 
 body {
+  width: 100%;
+  margin: 0;
+  padding: 2em 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: $main-color;
+  font-family: $main-font;
+  box-sizing: border-box;
+  @include mobile {
+    padding: 0;
+  }
+}
+
+.game {
+  display: flex;
+  flex-flow: row wrap;
+  align-content: space-around;
+  justify-content: space-around;
+  max-width: 550px;
+  width: 85%;
+  padding: 2em 2em;
+  background-color: $primary-color;
+  background-image: radial-gradient(circle at 20% 20%, lighten(#28546C, 15%), transparent 40%);
+  border-top: 10px solid darken($primary-color, 2%);
+  border-left: 10px solid darken($primary-color, 7%);
+  border-right: 20px solid darken($primary-color, 10%);
+  border-bottom: 20px solid darken($primary-color, 20%);
+  box-shadow: inset 0 0 10px darken($primary-color, 20%);
+  box-sizing: border-box;
+  &__title {
+    width: 100%;
+    margin: 0 0 0.5em;
+    font-size: 3em;
+    text-align: center;
+    color: lighten($primary-color, 70%);
+    text-shadow: 0 0 2px darken($primary-color, 30%);
+    @include mobile {
+      font-size: 2em;
+    }
+  }
+  @include mobile {
+    width: 100%;
+    padding: 2em 0.8em;
+  }
+}
+
+.puzzle {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  margin-bottom: 2em;
+  border-top: 20px solid darken($primary-color, 10%);
+  border-left: 20px solid darken($primary-color, 20%);
+  border-right: 10px solid darken($primary-color, 7%);
+  border-bottom: 10px solid darken($primary-color, 4%);
+  background-color: lighten($primary-color, 2%);
+  box-sizing: border-box;
+  $CELL: 4;
+  $GUTTER: 4;
+  &__cell {
+    width: calc(25% - #{$GUTTER * 1px});
+    height: calc(25% - #{$GUTTER * 1px});
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    box-sizing: border-box;
+    background-color: lighten($main-color, 15%);
+    box-shadow: inset 0 0 10px lighten($main-color, 5%);
+    color: white;
+    text-shadow: 0 0 3px darken($primary-color, 15%);
+    border-top: 10px solid lighten($main-color, 20%);
+    border-left: 10px solid lighten($main-color, 25%);
+    border-bottom: 10px solid lighten($main-color, 10%);
+    border-right: 10px solid lighten($main-color, 5%);
+    cursor: pointer;
+    transition: all 0.2s;
+    @include mobile {
+      font-size: 1.5em;
+    }
+    &[data-idx] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+    }
+    @for $i from 0 to $CELL {
+      @for $j from 0 to $CELL {
+        &[data-idx="#{$j + ($i * $CELL)}"] {
+          $translate-x: 100 * $j * 1%;
+          $translate-x-gutter: $GUTTER * $j * 1px;
+          $translate-y: 100 * $i * 1%;
+          $translate-y-gutter: $GUTTER * $i * 1px;
+          transform: translate(calc(#{$translate-x} + #{$translate-x-gutter}), calc(#{$translate-y} + #{$translate-y-gutter}));
+        }
+      }
+    }
+    &--blank {
+      cursor: auto;
+      box-shadow: none;
+      border-width: 0;
+      background-color: transparent;
+    }
+  }
+}
+
+.current-state {
+  display: flex;
+  margin: 0.5em;
+  padding: 0.5em 0.8em;
+  background-color: darken($primary-color, 10%);
+  color: #fff;
+  > div {
+    align-self: center;
+  }
+  &__move {
+    &__display {
+      color: lighten($main-color, 10%);
+    }
+  }
+  &__time {
+    margin-left: 1em;
+    padding-left: 1em;
+    border-left: 2px solid rgba($primary-color, 0.6);
+    &__display {
+      color: lighten($main-color, 10%);
+    }
+  }
+}
+
+.btn--restart {
+  padding: 0.5em 0.8em;
+  border: 0;
+  margin: 0.5em;
+  font-family: $main-font;
+  font-size: 1.5em;
+  color: #fff;
+  background: $point-color;
+  border-top: 3px solid darken($point-color, 5%);
+  border-left: 3px solid darken($point-color, 7%);
+  border-bottom: 5px solid darken($point-color, 15%);
+  border-right: 5px solid darken($point-color, 10%);
+  box-shadow: inset -1px -1px 5px darken($point-color, 20%);
+  &:hover {
+    cursor: pointer;
+    background: darken($point-color, 5%);
+  }
+}
+
+.modal {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.5s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  &__guide {
+    text-align: center;
+    font-family: $sub-font;
+    background-color: darken($main-color, 8%);
+    padding: 1.5em 3em;
+    line-height: 200%;
+    color: #fff;
+    > strong {
+      font-size: 1.5em;
+    }
+  } 
+  .btn--start {
+    font-family: $main-font;
+    font-size: 1.5em;
+    color : #fff;
+    background-color: $point-color;
+    border: 0;
+    padding: 0.5em 0.8em;
+    border-top: 3px solid darken($point-color, 5%);
+    border-left: 3px solid darken($point-color, 7%);
+    border-bottom: 5px solid darken($point-color, 15%);
+    border-right: 5px solid darken($point-color, 10%);
+    box-shadow: inset -1px -1px 5px darken($point-color, 20%);
+    cursor: pointer;
+  }
+  .final-score, .final-message {
+    transform: scale(0);
+  }
+  &--start {
+    opacity: 1;
+    transform: scale(1);
+    background-color: rgba($main-color , 0.8);
+    .final-score, .final-message {
+      display: none;
+    }
+  }
+  &--end {
+    opacity: 1;
+    transform: scale(1);
+    background-color: rgba($primary-color, 0.8);
+    .modal__guide {
+      display: none;
+    }
+    .final-score, .final-message {
+      animation: final 0.5s forwards;
+    }
+  }
+}
+
+.final-message {
+  background-color: darken($primary-color, 8%);
+  transform: scale(0);
+  padding: 1.2em 1.5em; 
+  text-align: center;  
+  font-size: 1.2em;
+  color: lighten($primary-color, 40%);
+  > em {
+    font-style: normal;
+    display: block;
+    margin-bottom: 0.3em;
+    font-size: 3.5em;
+    font-weight: bold;
+    font-family: $main-font;
+    color: #fff;
+    @include mobile {
+      font-size: 2em;
+    }
+  }
+}
+
+.final-score {
+  // display: flex;
+  background-color: #fff;
+  color: darken($primary-color , 8%);
+  padding: 1.2em 0.8em;
+  &__time {
+    padding-top: 1em;
+    margin-top: 1em;
+    border-top: 1px solid rgba($primary-color, 0.2);
+  }
+  &__move__display, &__time__display {
+    color: $point-color;
+  }
+}
+
+// 완료시 애니메이션
+@keyframes final {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
